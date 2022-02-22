@@ -15,8 +15,8 @@ function easyFilter(selector, data, callback){
                                 );
                             });
                         callback(filteredTitle);
-                    })        
-    }
+        })        
+}
 
 // fonction fetch dynamique
 

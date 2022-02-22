@@ -10,6 +10,9 @@
 
 /* CSS header */
 
+button {
+    cursor: pointer;
+}
 
 header{
     background-color: rgba(20, 28, 58, 1);

@@ -1,12 +1,9 @@
-// easyFetch("https://strapi-gogokodo.herokuapp.com/api/sources",callback, method = 'GET', headers = {}, body )
-
-
 function filter(data) {
   easyFilter("#searchBar", data, myApi)
   myApi(data)
 }
 
-easyFetch("https://strapi-gogokodo.herokuapp.com/api/sources", filter)
+easyFetch("https://strapi-gogokodo.herokuapp.com/api/sources?pagination[page]=1&pagination[pageSize]=100", filter)
 
 
 
@@ -38,6 +35,14 @@ firebase.auth().onAuthStateChanged((user) => {
 function myApi(data) {
   const article = document.getElementById("art")
   article.innerHTML = ''
+
+  async function displayPage(){
+    
+    const elements = []
+    let rep = await fetch('https://strapi-gogokodo.herokuapp.com/api/sources?pagination[page]=1&pagination[pageSize]=10');
+    let response = await rep.json();
+    elements = response.meta
+  }
 
   for (video of data) {
 
@@ -88,20 +93,18 @@ function myApi(data) {
         catColor = '"background-color:#BC8F8F"'
     }
 
-    console.log(video)
-    article.innerHTML += `<section class="caps">
-<h3>${video.attributes.title}</h3>
-<p style=${catColor} class="category">${video.attributes.category.toUpperCase()}</p>
-<img src="./images/heart_empty.png" class="heart-empty"alt="empty heart logo">
-<div class="caps-footer">
-  <div style=${diffColor} class="color"></div>
-  <button class="valide"><a href="${video.attributes.url}" target=blank>Visiter</button>
-</div>
-</section>`
+    article.innerHTML += `
+    <section class="caps">
+      <h3>${video.attributes.title}</h3>
+      <p style=${catColor} class="category">${video.attributes.category.toUpperCase()}</p>
+      <img id="favorite" src="./images/heart_empty.png" class="heart-empty"alt="empty heart logo" onclick="switchFav(this);">
+      <div class="caps-footer">
+        <div style=${diffColor} class="color"></div>
+        <button class="valide"><a href="${video.attributes.url}" target=blank>Visiter</button>
+      </div>
+    </section>`  
   }
 }
-
-
 
 /////////////////////////////// terminal ///////////////////////////////////
 
@@ -130,6 +133,7 @@ terminal.addEventListener('click', () => {
 
 const check = document.querySelector(".console")
 const menu = document.querySelector(".menu")
+const addFav = document.querySelectorAll('.addFav')
 
 check.addEventListener('change', (e) => {
   if (e.target.value == "ls") {
@@ -156,3 +160,11 @@ check.addEventListener('change', (e) => {
     e.target.value = ""
   }
 })
+
+function switchFav (element) {    
+  if (element.getAttribute("src") == "./images/heart_empty.png") {
+      element.src = "./images/heart_full.png"
+  } else {
+      element.src = "./images/heart_empty.png"
+  }
+}
