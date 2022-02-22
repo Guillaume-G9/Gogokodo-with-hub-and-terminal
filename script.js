@@ -42,8 +42,9 @@ function myApi(data) {
     let rep = await fetch('https://strapi-gogokodo.herokuapp.com/api/sources?pagination[page]=1&pagination[pageSize]=10');
     let response = await rep.json();
     elements = response.meta
+    console.log(elements)
   }
-
+  
   for (video of data) {
 
   let diffColor = ""
@@ -118,6 +119,7 @@ const termLine = document.querySelector("#text")
 terminal.addEventListener('click', () => {
   if (term.style.display === "none") {
     term.style.display = "block"
+    menu.style.display = "none"
     termLine.focus()
     main.style.display = "none"
     titre.innerHTML = "TERMINAL"

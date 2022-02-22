@@ -160,16 +160,11 @@ h3{
 
 /* css terminal */
 
-.main{
-    display: block;
-}
-
 .terminal {
     background-color: black;
     font-family: 'VT323', monospace;
     height: 78vh;
     color: grey;
-    display: none;
 }
 
 .terminal ul li {
@@ -205,11 +200,11 @@ h3{
 .menu{
     margin: 8% 0 0 15%;
     font-size: 1.5em;
+    display: none;
 }
 
 ul{
     list-style-type: none;
-    display: none;
 }
 
 
