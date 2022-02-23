@@ -1,9 +1,7 @@
-function filter(data) {
-  easyFilter("#searchBar", data, myApi)
-  myApi(data)
-}
-
 easyFetch("https://strapi-gogokodo.herokuapp.com/api/sources?pagination[page]=1&pagination[pageSize]=100", filter)
+
+let data = []
+
 
 ///////////////// firebase ////////////////////
 
@@ -31,26 +29,18 @@ firebase.auth().onAuthStateChanged((user) => {
 
 
 function myApi(data) {
-
+  
   const article = document.getElementById("art")
   article.innerHTML = ""
 console.log(data)
-  // async function displayPage(){
-    
-  //   const elements = []
-  //   let rep = await fetch('https://strapi-gogokodo.herokuapp.com/api/sources?pagination[page]=1&pagination[pageSize]=10');
-  //   let response = await rep.json();
-  //   elements = response.meta
-  //   console.log(elements)
-  // }
   
   for (video of data) {
-
+    
   if (video) {
-  let diffColor = ""
-  switch (video.attributes.difficulty) {
-    case "Facile":
-    diffColor = '"background-color:green"'
+    let diffColor = ""
+    switch (video.attributes.difficulty) {
+      case "Facile":
+        diffColor = '"background-color:green"'
       break;
     case "Moyen" :
         diffColor = '"background-color: orange"'
@@ -62,44 +52,30 @@ console.log(data)
         diffColor = '"background-color:green"'
     default:
         diffColor = '"background-color:green"'
-  }
+      }
 
   
-  catColor =""
+  let categoryColor = "";
+  let category = video.attributes.category
 
-    switch (video.attributes.category) {
-      case "javascript":
-        catColor = '"background-color:#556AD8"'
-        break;
-      case "html/css" :
-        catColor = '"background-color:#8CBDBF"'
-        break;
-      case "Nodejs":
-        catColor = '"background-color:#D8559C"'
-        break;
-      case "agile":
-        catColor = '"background-color:#708090"'
-        break;
-      case "kanban":
-        catColor = '"background-color:#DEB887"'
-        break;
-      case "wordpress":
-        catColor = '"background-color:#6495ED"'
-        break;
-      case "seo":
-        catColor = '"background-color:#6B8E23"'
-        break;
-      case "SQL":
-        catColor = '"background-color:#EF8180"'
-        break;
-      default:
-        catColor = '"background-color:#BC8F8F"'
+
+
+  if (video.attributes.color === null) {
+          categoryColor = "grey";
+      }
+  if (video.attributes.color === null) {
+      for (i=0; i<data.length; i++) {
+          if (data[i].attributes.category == category && data[i].attributes.color != null) {
+              categoryColor = data[i].attributes.color
+          } 
+      } 
+    } else {
+        categoryColor = video.attributes.color;
     }
-
     article.innerHTML += `
     <section data-id="${video.id}"class="caps">
       <h3>${video.attributes.title}</h3>
-      <p style=${catColor} class="category">${video.attributes.category}</p>
+      <p style="background-color:${categoryColor}" class="category">${video.attributes.category}</p>
       <img id="favorite" src="./images/heart_empty.png" class="heart-empty"alt="empty heart logo" onclick="switchFav(this);">
       <div class="caps-footer">
         <div style=${diffColor} data-color="${video.attributes.difficulty? video.attributes.difficulty : "Facile"}" class="color"></div>
@@ -164,16 +140,22 @@ function switchFav (element) {
     element.src = "./images/heart_full.png"
     const object ={}
     object.attributes =
-    {title:element.parentNode.querySelector("h3").textContent, url: element.parentNode.querySelector("a").href, difficulty: element.parentNode.querySelector(".color").dataset.color, category: element.parentNode.querySelector("p").textContent }
+    {title:element.parentNode.querySelector("h3").textContent, url: element.parentNode.querySelector("a").href, difficulty: element.parentNode.querySelector(".color").dataset.color, category: element.parentNode.querySelector("p").textContent, color:  }
     favorites[element.parentNode.dataset.id] = (object)
   } else {
     element.src = "./images/heart_empty.png"
     favorites[element.parentNode.dataset.id]= null
   }
   console.log(favorites)
-
+  
 }
 
 favBtn.addEventListener("click", () => {
   myApi(favorites)
 })
+
+function filter(data) {
+  easyFilter("#searchBar", data, myApi)
+  myApi(data)
+}
+
